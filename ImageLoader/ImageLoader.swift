@@ -136,7 +136,7 @@ public enum State {
 /**
     Responsible for creating and managing `Loader` objects and controlling of `NSURLSession` and `ImageCache`
 */
-public class Manager {
+public class LoaderManager {
 
     let session: NSURLSession
     let cache: ImageCache
@@ -144,9 +144,9 @@ public class Manager {
     public var inflatesImage: Bool = true
 
     // MARK: singleton instance
-    public class var sharedInstance: Manager {
+    public class var sharedInstance: LoaderManager {
         struct Singleton {
-            static let instance = Manager()
+            static let instance = LoaderManager()
         }
 
         return Singleton.instance
@@ -288,13 +288,13 @@ public class Manager {
 */
 public class Loader {
 
-    let delegate: Manager
+    let delegate: LoaderManager
     let task: NSURLSessionDataTask
     var receivedData: NSMutableData = NSMutableData()
     let inflatesImage: Bool
     internal var blocks: [Block] = []
 
-    init (task: NSURLSessionDataTask, delegate: Manager) {
+    init (task: NSURLSessionDataTask, delegate: LoaderManager) {
         self.task = task
         self.delegate = delegate
         self.inflatesImage = delegate.inflatesImage
@@ -373,35 +373,35 @@ public class Loader {
 }
 
 /**
-    Creates `Loader` object using the shared manager instance for the specified URL.
+    Creates `Loader` object using the shared LoaderManager instance for the specified URL.
 */
 public func load(URL: URLLiteralConvertible) -> Loader {
-    return Manager.sharedInstance.load(URL)
+    return LoaderManager.sharedInstance.load(URL)
 }
 
 /**
-    Suspends `Loader` object using the shared manager instance for the specified URL.
+    Suspends `Loader` object using the shared LoaderManager instance for the specified URL.
 */
 public func suspend(URL: URLLiteralConvertible) -> Loader? {
-    return Manager.sharedInstance.suspend(URL)
+    return LoaderManager.sharedInstance.suspend(URL)
 }
 
 /**
-    Cancels `Loader` object using the shared manager instance for the specified URL.
+    Cancels `Loader` object using the shared LoaderManager instance for the specified URL.
 */
 public func cancel(URL: URLLiteralConvertible) -> Loader? {
-    return Manager.sharedInstance.cancel(URL)
+    return LoaderManager.sharedInstance.cancel(URL)
 }
 
 /**
-    Fetches the image using the shared manager instance's `ImageCache` object for the specified URL.
+    Fetches the image using the shared LoaderManager instance's `ImageCache` object for the specified URL.
 */
 public func cache(URL: URLLiteralConvertible) -> UIImage? {
     let URL = URL.URL
 
-    return Manager.sharedInstance.cache[URL]
+    return LoaderManager.sharedInstance.cache[URL]
 }
 
 public var state: State {
-    return Manager.sharedInstance.state
+    return LoaderManager.sharedInstance.state
 }
