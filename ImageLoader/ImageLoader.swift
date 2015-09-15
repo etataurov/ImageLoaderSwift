@@ -278,6 +278,7 @@ public class LoaderManager {
             // loader completion, and store remove loader
             if let URL = task.originalRequest.URL, let loader = self[URL] {
                 loader.complete(error)
+                remove(URL)
             }
         }
     }
